@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include <random>
 
@@ -12,6 +13,8 @@
 #include "core/alex_base.h"
 
 #include "pgm/pgm_index.hpp"
+
+#include "fitting_tree/fitting_tree.hpp"
 
 #include "rs/builder.h"
 #include "rs/radix_spline.h"
@@ -377,6 +380,88 @@ void benchmark_pgm(const std::vector<key_type> &keys,
     PGM(1, 16)
 
 #undef PGM
+}
+
+
+/*======================================================================================================================
+ * Fitting Tree
+ *====================================================================================================================*/
+
+/**
+ * Builds Fitting Trees of different size on @p keys and performs @p n_reps of lookups on @p samples. Writes results
+ * including build time, evaluation time, and lookup time to `std::cout`.
+ * @param keys on which the index is built
+ * @param samples used for measuring the lookup time
+ * @param n_reps number of repetitions
+ * @param dataset_name name of the dataset
+ */
+void benchmark_fitting_tree(const std::vector<key_type> &keys,
+                            const std::vector<key_type> &samples,
+                            const std::size_t n_reps,
+                            const std::string dataset_name)
+{
+    std::vector<double> error_bounds = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+
+    for (double error_bound : error_bounds) {
+        auto error = static_cast<std::size_t>(std::ceil(error_bound));
+
+        // Perform n_reps runs.
+        for (std::size_t rep = 0; rep != n_reps; ++rep) {
+
+            // Build time.
+            auto start = steady_clock::now();
+            Optimal::FittingTree<key_type> tree(error_bound);
+            tree.build(keys);
+            auto stop = steady_clock::now();
+            auto build_time = duration_cast<nanoseconds>(stop - start).count();
+
+            // Eval time.
+            std::size_t eval_accu = 0;
+            start = steady_clock::now();
+            for (std::size_t i = 0; i != samples.size(); ++i) {
+                auto key = samples.at(i);
+                auto pred = static_cast<std::size_t>(tree.search(key));
+                eval_accu += pred;
+            }
+            stop = steady_clock::now();
+            auto eval_time = duration_cast<nanoseconds>(stop - start).count();
+            s_glob = eval_accu;
+
+            // Lookup time.
+            std::size_t lookup_accu = 0;
+            start = steady_clock::now();
+            for (std::size_t i = 0; i != samples.size(); ++i) {
+                auto key = samples.at(i);
+                auto pred = static_cast<std::size_t>(tree.search(key));
+                auto lo = pred > error ? pred - error : 0;
+                auto hi = std::min<std::size_t>(keys.size(), pred + error + 1);
+                auto pos = std::lower_bound(keys.begin() + lo, keys.begin() + hi, key);
+                lookup_accu += std::distance(keys.begin(), pos);
+            }
+            stop = steady_clock::now();
+            auto lookup_time = duration_cast<nanoseconds>(stop - start).count();
+            s_glob = lookup_accu;
+
+            // Report results.
+                      // Dataset
+            std::cout << dataset_name << ','
+                      << keys.size() << ','
+                      // Index
+                      << "Fitting Tree" << ','
+                      << "\"error_bound=" << error_bound << "\"" << ','
+                      << tree.size_in_bytes() << ','
+                      // Experiment
+                      << rep << ','
+                      << samples.size() << ','
+                      // Results
+                      << build_time << ','
+                      << eval_time << ','
+                      << lookup_time << ','
+                      // Checksums
+                      << eval_accu << ','
+                      << lookup_accu << std::endl;
+        } // rep
+    } // error_bound
 }
 
 
@@ -992,6 +1077,11 @@ int main(int argc, char *argv[])
         .default_value(false)
         .implicit_value(true);
 
+    program.add_argument("--fitting-tree")
+        .help("run benchmark on Fitting Tree")
+        .default_value(false)
+        .implicit_value(true);
+
     program.add_argument("--rs")
         .help("run benchmark on RadixSpline")
         .default_value(false)
@@ -1069,6 +1159,7 @@ int main(int argc, char *argv[])
     if (program["--rmi"]  == true) benchmark_rmi(keys, samples, n_reps, dataset_name);
     if (program["--alex"] == true) benchmark_alex(keys, samples, n_reps, dataset_name);
     if (program["--pgm"]  == true) benchmark_pgm(keys, samples, n_reps, dataset_name);
+    if (program["--fitting-tree"] == true) benchmark_fitting_tree(keys, samples, n_reps, dataset_name);
     if (program["--rs"]   == true) benchmark_rs(keys, samples, n_reps, dataset_name);
     if (program["--cht"]  == true) benchmark_cht(keys, samples, n_reps, dataset_name);
     if (program["--art"]  == true) benchmark_art(keys, samples, n_reps, dataset_name);
