@@ -4,7 +4,7 @@ trap "exit" SIGINT
 
 EXPERIMENT="index comparison"
 
-DIR_DATA="data"
+DIR_DATA="/home/andy/Projects/Datasets/SOSD"
 DIR_RESULTS="results"
 FILE_RESULTS="${DIR_RESULTS}/index_comparison.csv"
 
@@ -17,10 +17,10 @@ PARAMS="--n_reps ${N_REPS} --n_samples ${N_SAMPLES}"
 
 # Set which indexes to run on datasets
 declare -A flags
-flags['books_200M_uint64']="--rmi --alex --pgm --rs --cht --art --tlx --ref --bin"
-flags['fb_200M_uint64']="--rmi --alex --pgm --rs --cht --art --tlx --ref --bin"
-flags['osm_cellids_200M_uint64']="--rmi --alex --pgm --rs --cht --art --tlx --ref --bin"
-flags['wiki_ts_200M_uint64']="--rmi --alex --pgm --rs --tlx --ref --bin" # ART and CHT do not support duplicates
+# flags['books_200M_uint64']="--rmi --alex --pgm --rs --cht --art --tlx --ref --bin"
+flags['fb_200M_uint64']="--pgm --ref --bin"
+# flags['osm_cellids_200M_uint64']="--rmi --alex --pgm --rs --cht --art --tlx --ref --bin"
+# flags['wiki_ts_200M_uint64']="--rmi --alex --pgm --rs --tlx --ref --bin" # ART and CHT do not support duplicates
 
 run() {
     DATASET=$1

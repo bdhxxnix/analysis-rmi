@@ -2,16 +2,16 @@
 # set -x
 trap "exit" SIGINT
 
-DIR_DATA="data"
+DIR_DATA="/home/andy/Projects/Datasets/SOSD"
 RMI_PATH="third_party/RMI"
 CONFIG_PATH="scripts/rmi_ref"
 
-DATASETS="books_200M_uint64 fb_200M_uint64 osm_cellids_200M_uint64 wiki_ts_200M_uint64"
+DATASETS="fb_200M_uint64"
 
 gen_config_json() {
     DATASET=$1
     CWD=$(pwd)
-    DATA_FILE="${CWD}/${DIR_DATA}/${DATASET}"
+    DATA_FILE="${DIR_DATA}/${DATASET}"
     CONFIG_FILE="${CWD}/${CONFIG_PATH}/${DATASET}.json"
     MANIFEST_FILE="${CWD}/${RMI_PATH}/Cargo.toml"
 
@@ -22,7 +22,7 @@ gen_config_json() {
 train_rmi () {
     DATASET=$1
     CWD=$(pwd)
-    DATA_FILE="${CWD}/${DIR_DATA}/${DATASET}"
+    DATA_FILE="${DIR_DATA}/${DATASET}"
     CONFIG_FILE="${CWD}/${CONFIG_PATH}/${DATASET}.json"
     MANIFEST_FILE="${CWD}/${RMI_PATH}/Cargo.toml"
 

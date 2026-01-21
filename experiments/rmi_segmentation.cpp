@@ -2,6 +2,7 @@
 
 #include "rmi/models.hpp"
 #include "rmi/util/fn.hpp"
+#include <cstdint>
 
 using key_type = uint64_t;
 

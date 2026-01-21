@@ -23,16 +23,16 @@
 
 #include "tlx/container/btree_multimap.hpp"
 
-#include "rmi_ref/books_200M_uint64_0.h"
-#include "rmi_ref/books_200M_uint64_1.h"
-#include "rmi_ref/books_200M_uint64_2.h"
-#include "rmi_ref/books_200M_uint64_3.h"
-#include "rmi_ref/books_200M_uint64_4.h"
-#include "rmi_ref/books_200M_uint64_5.h"
-#include "rmi_ref/books_200M_uint64_6.h"
-#include "rmi_ref/books_200M_uint64_7.h"
-#include "rmi_ref/books_200M_uint64_8.h"
-#include "rmi_ref/books_200M_uint64_9.h"
+// #include "rmi_ref/books_200M_uint64_0.h"
+// #include "rmi_ref/books_200M_uint64_1.h"
+// #include "rmi_ref/books_200M_uint64_2.h"
+// #include "rmi_ref/books_200M_uint64_3.h"
+// #include "rmi_ref/books_200M_uint64_4.h"
+// #include "rmi_ref/books_200M_uint64_5.h"
+// #include "rmi_ref/books_200M_uint64_6.h"
+// #include "rmi_ref/books_200M_uint64_7.h"
+// #include "rmi_ref/books_200M_uint64_8.h"
+// #include "rmi_ref/books_200M_uint64_9.h"
 #include "rmi_ref/fb_200M_uint64_0.h"
 #include "rmi_ref/fb_200M_uint64_1.h"
 #include "rmi_ref/fb_200M_uint64_2.h"
@@ -43,26 +43,26 @@
 #include "rmi_ref/fb_200M_uint64_7.h"
 #include "rmi_ref/fb_200M_uint64_8.h"
 #include "rmi_ref/fb_200M_uint64_9.h"
-#include "rmi_ref/osm_cellids_200M_uint64_0.h"
-#include "rmi_ref/osm_cellids_200M_uint64_1.h"
-#include "rmi_ref/osm_cellids_200M_uint64_2.h"
-#include "rmi_ref/osm_cellids_200M_uint64_3.h"
-#include "rmi_ref/osm_cellids_200M_uint64_4.h"
-#include "rmi_ref/osm_cellids_200M_uint64_5.h"
-#include "rmi_ref/osm_cellids_200M_uint64_6.h"
-#include "rmi_ref/osm_cellids_200M_uint64_7.h"
-#include "rmi_ref/osm_cellids_200M_uint64_8.h"
-#include "rmi_ref/osm_cellids_200M_uint64_9.h"
-#include "rmi_ref/wiki_ts_200M_uint64_0.h"
-#include "rmi_ref/wiki_ts_200M_uint64_1.h"
-#include "rmi_ref/wiki_ts_200M_uint64_2.h"
-#include "rmi_ref/wiki_ts_200M_uint64_3.h"
-#include "rmi_ref/wiki_ts_200M_uint64_4.h"
-#include "rmi_ref/wiki_ts_200M_uint64_5.h"
-#include "rmi_ref/wiki_ts_200M_uint64_6.h"
-#include "rmi_ref/wiki_ts_200M_uint64_7.h"
-#include "rmi_ref/wiki_ts_200M_uint64_8.h"
-#include "rmi_ref/wiki_ts_200M_uint64_9.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_0.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_1.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_2.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_3.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_4.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_5.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_6.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_7.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_8.h"
+// #include "rmi_ref/osm_cellids_200M_uint64_9.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_0.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_1.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_2.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_3.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_4.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_5.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_6.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_7.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_8.h"
+// #include "rmi_ref/wiki_ts_200M_uint64_9.h"
 
 
 using key_type = uint64_t;
@@ -832,18 +832,18 @@ void benchmark_ref(const std::vector<key_type> &keys,
     } /* rep */ \
     NAMESPACE::cleanup(); \
 
-    if (dataset_name == "books_200M_uint64") {
-        RUN(books_200M_uint64_0)
-        RUN(books_200M_uint64_1)
-        RUN(books_200M_uint64_2)
-        RUN(books_200M_uint64_3)
-        RUN(books_200M_uint64_4)
-        RUN(books_200M_uint64_5)
-        RUN(books_200M_uint64_6)
-        RUN(books_200M_uint64_7)
-        RUN(books_200M_uint64_8)
-        RUN(books_200M_uint64_9)
-    } else if (dataset_name == "fb_200M_uint64") {
+    // if (dataset_name == "books_200M_uint64") {
+    //     RUN(books_200M_uint64_0)
+    //     RUN(books_200M_uint64_1)
+    //     RUN(books_200M_uint64_2)
+    //     RUN(books_200M_uint64_3)
+    //     RUN(books_200M_uint64_4)
+    //     RUN(books_200M_uint64_5)
+    //     RUN(books_200M_uint64_6)
+    //     RUN(books_200M_uint64_7)
+    //     RUN(books_200M_uint64_8)
+    //     RUN(books_200M_uint64_9)
+    if (dataset_name == "fb_200M_uint64") {
         RUN(fb_200M_uint64_0)
         RUN(fb_200M_uint64_1)
         RUN(fb_200M_uint64_2)
@@ -854,29 +854,30 @@ void benchmark_ref(const std::vector<key_type> &keys,
         RUN(fb_200M_uint64_7)
         RUN(fb_200M_uint64_8)
         RUN(fb_200M_uint64_9)
-    } else if (dataset_name == "osm_cellids_200M_uint64") {
-        RUN(osm_cellids_200M_uint64_0)
-        RUN(osm_cellids_200M_uint64_1)
-        RUN(osm_cellids_200M_uint64_2)
-        RUN(osm_cellids_200M_uint64_3)
-        RUN(osm_cellids_200M_uint64_4)
-        RUN(osm_cellids_200M_uint64_5)
-        RUN(osm_cellids_200M_uint64_6)
-        RUN(osm_cellids_200M_uint64_7)
-        RUN(osm_cellids_200M_uint64_8)
-        RUN(osm_cellids_200M_uint64_9)
-    } else if (dataset_name == "wiki_ts_200M_uint64") {
-        RUN(wiki_ts_200M_uint64_0)
-        RUN(wiki_ts_200M_uint64_1)
-        RUN(wiki_ts_200M_uint64_2)
-        RUN(wiki_ts_200M_uint64_3)
-        RUN(wiki_ts_200M_uint64_4)
-        RUN(wiki_ts_200M_uint64_5)
-        RUN(wiki_ts_200M_uint64_6)
-        RUN(wiki_ts_200M_uint64_7)
-        RUN(wiki_ts_200M_uint64_8)
-        RUN(wiki_ts_200M_uint64_9)
-    } else {
+    }
+    //  else if (dataset_name == "osm_cellids_200M_uint64") {
+    //     RUN(osm_cellids_200M_uint64_0)
+    //     RUN(osm_cellids_200M_uint64_1)
+    //     RUN(osm_cellids_200M_uint64_2)
+    //     RUN(osm_cellids_200M_uint64_3)
+    //     RUN(osm_cellids_200M_uint64_4)
+    //     RUN(osm_cellids_200M_uint64_5)
+    //     RUN(osm_cellids_200M_uint64_6)
+    //     RUN(osm_cellids_200M_uint64_7)
+    //     RUN(osm_cellids_200M_uint64_8)
+    //     RUN(osm_cellids_200M_uint64_9)
+    // } else if (dataset_name == "wiki_ts_200M_uint64") {
+    //     RUN(wiki_ts_200M_uint64_0)
+    //     RUN(wiki_ts_200M_uint64_1)
+    //     RUN(wiki_ts_200M_uint64_2)
+    //     RUN(wiki_ts_200M_uint64_3)
+    //     RUN(wiki_ts_200M_uint64_4)
+    //     RUN(wiki_ts_200M_uint64_5)
+    //     RUN(wiki_ts_200M_uint64_6)
+    //     RUN(wiki_ts_200M_uint64_7)
+    //     RUN(wiki_ts_200M_uint64_8)
+    //     RUN(wiki_ts_200M_uint64_9)
+    else {
         std::cerr << "Reference implementation RMI not pre-trained for given dataset. Skipping." << std::endl;
         return;
     }

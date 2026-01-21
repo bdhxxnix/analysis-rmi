@@ -36,12 +36,13 @@ def plot_lookup(filename='index_comparison-lookup_time.pdf', width_fact=5, heigh
     n_cols = 2
 
     fig, axs = plt.subplots(n_rows, n_cols, figsize=(width_fact*n_cols, height_fact*n_rows), sharey=True, sharex=True)
+    axs = axs.flatten()
     fig.tight_layout()
 
     for i, dataset in enumerate(datasets):
-        row = int(i / 2)
-        col = int(i % 2)
-        ax = axs[row,col]
+        # row = int(i / 2)
+        # col = int(i % 2)
+        ax = axs[i]
 
         # Scatter indexes
         for index in index_dict.keys():
@@ -62,26 +63,27 @@ def plot_lookup(filename='index_comparison-lookup_time.pdf', width_fact=5, heigh
         ax.set_title(dataset)
 
         # Labels
-        if row==n_rows - 1:
-            ax.set_xlabel('Index size [MiB]')
-        if col==0:
-            ax.set_ylabel('Lookup time [ns]')
+        # if row==n_rows - 1:
+        #     ax.set_xlabel('Index size [MiB]')
+        # if col==0:
+        #     ax.set_ylabel('Lookup time [ns]')
 
         # Visuals
         ax.set_xscale('log')
         ax.set_ylim(bottom=0, top=1250)
+        ax.set_xlabel('Index size [MiB]')
+        ax.set_ylabel('Lookup time [ns]')
 
         # Legend
-        if row==0 and col==0:
-            fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
+    fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
 
         # Binary search
-        if True:
-            data = df[
-                (df['dataset']==dataset) &
-                (df['index']=='Binary search')
-            ].iloc[0]
-            ax.axhline(y=data['lookup_in_ns'], marker='None', color='.2', dashes=(2, 1), label='Binary search')
+        # if True:
+        #     data = df[
+        #         (df['dataset']==dataset) &
+        #         (df['index']=='Binary search')
+        #     ].iloc[0]
+        #     ax.axhline(y=data['lookup_in_ns'], marker='None', color='.2', dashes=(2, 1), label='Binary search')
 
     fig.savefig(os.path.join(path, filename), bbox_inches='tight')
 
@@ -91,12 +93,13 @@ def plot_build(filename='index_comparison-build_time.pdf', width_fact=5, height_
     n_rows = 2
 
     fig, axs = plt.subplots(n_rows, n_cols, figsize=(width_fact*n_cols, height_fact*n_rows), sharey=True, sharex=True)
+    axs = axs.flatten()
     fig.tight_layout()
 
     for i, dataset in enumerate(datasets):
-        row = int(i / 2)
-        col = int(i % 2)
-        ax = axs[row,col]
+        # row = int(i / 2)
+        # col = int(i % 2)
+        ax = axs[i]
 
         # Scatter indexes
         for index in index_dict.keys():
@@ -117,18 +120,15 @@ def plot_build(filename='index_comparison-build_time.pdf', width_fact=5, height_
         ax.set_title(dataset)
 
         # Labels
-        if row==n_rows - 1:
-            ax.set_xlabel('Index size [MiB]')
-        if col==0:
-            ax.set_ylabel('Build time [s]')
+        ax.set_xlabel('Index size [MiB]')
+        ax.set_ylabel('Build time [s]')
 
         # Visuals
         ax.set_xscale('log')
         ax.set_ylim(bottom=-1, top=30)
 
         # Legend
-        if row==0 and col==0:
-            fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
+        fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
 
     fig.savefig(os.path.join(path, filename), bbox_inches='tight')
 
@@ -137,7 +137,15 @@ def plot_lookup_shares(filename, width_fact=5, height_fact=4.2):
     n_cols = len(datasets)
     n_rows = 1
 
-    fig, axs = plt.subplots(n_rows, n_cols, figsize=(width_fact*n_cols, height_fact*n_rows), sharey=True, sharex=False)
+    fig, axs = plt.subplots(
+        n_rows,
+        n_cols,
+        figsize=(width_fact*n_cols, height_fact*n_rows),
+        sharey=True,
+        sharex=False,
+        squeeze=False
+    )
+    axs = axs.flatten()
     fig.tight_layout()
 
     for col, dataset in enumerate(datasets):
@@ -150,14 +158,14 @@ def plot_lookup_shares(filename, width_fact=5, height_fact=4.2):
         bar_colors = []
 
         # Binary search
-        row = df[
-            (df['dataset']==dataset) &
-            (df['index']=='Binary search')
-        ].iloc[0]
-        labels.append('Binary search')
-        evals.append(0)
-        searches.append(row['lookup_in_ns'])
-        bar_colors.append('.2')
+        # row = df[
+        #     (df['dataset']==dataset) &
+        #     (df['index']=='Binary search')
+        # ].iloc[0]
+        # labels.append('Binary search')
+        # evals.append(0)
+        # searches.append(row['lookup_in_ns'])
+        # bar_colors.append('.2')
 
         for index in index_dict.keys():
             data = df[
@@ -210,21 +218,21 @@ if __name__ == "__main__":
 
     # Replace datasets
     dataset_dict = {
-        "books_200M_uint64": "books",
+        # "books_200M_uint64": "books",
         "fb_200M_uint64": "fb",
-        "osm_cellids_200M_uint64": "osmc",
-        "wiki_ts_200M_uint64": "wiki"
+        # "osm_cellids_200M_uint64": "osmc",
+        # "wiki_ts_200M_uint64": "wiki"
     }
     df.replace({**dataset_dict}, inplace=True)
     index_dict = {
-        'RMI-ours': 'RMI (ours)',
+        # 'RMI-ours': 'RMI (ours)',
         'RMI-ref': 'RMI (ref)',
-        'ALEX': 'ALEX',
+        # 'ALEX': 'ALEX',
         'PGM-index': 'PGM-index',
-        'RadixSpline': 'RadixSpline',
-        'Compact Hist-Tree': 'Hist-Tree',
-        'B-tree': 'B-tree',
-        'ART': 'ART'
+        # 'RadixSpline': 'RadixSpline',
+        # 'Compact Hist-Tree': 'Hist-Tree',
+        # 'B-tree': 'B-tree',
+        # 'ART': 'ART'
     }
 
     # Compute metrics
