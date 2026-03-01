@@ -1,26 +1,27 @@
-#!bash
 # set -x
+#!/usr/bin/env bash
+
 trap "exit" SIGINT
 
-EXPERIMENT="index comparison"
+EXPERIMENT="index comparison I/O"
 
 DIR_DATA="/home/andy/Projects/Datasets/SOSD"
 DIR_RESULTS="results"
-FILE_RESULTS="${DIR_RESULTS}/index_comparison.csv"
+FILE_RESULTS="${DIR_RESULTS}/index_comparison_io.csv"
 
 BIN="build/bin/index_comparison"
 
 # Set number of repetitions and samples
 N_REPS="3"
 N_SAMPLES="20000000"
-PARAMS="--n_reps ${N_REPS} --n_samples ${N_SAMPLES}"
+PARAMS="--io --n_reps ${N_REPS} --n_samples ${N_SAMPLES}"
 
 # Set which indexes to run on datasets
 declare -A flags
-# flags['books_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --cht --art --tlx --ref --bin"
+# flags['books_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --cht --ref"
 flags['fb_200M_uint64']="--pgm --ref --bin"
-# flags['osm_cellids_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --cht --art --tlx --ref --bin"
-# flags['wiki_ts_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --tlx --ref --bin" # ART and CHT do not support duplicates
+# flags['osm_cellids_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --cht --ref"
+# flags['wiki_ts_200M_uint64']="--rmi --alex --pgm --fitting-tree --rs --ref" # ART and CHT do not support duplicates
 
 run() {
     DATASET=$1
@@ -42,7 +43,7 @@ then
 fi
 
 # Run experiments
-echo "dataset,n_keys,index,config,size_in_bytes,rep,n_samples,build_time,eval_time,lookup_time,eval_accu,lookup_accu" > ${FILE_RESULTS} # Write csv header
+echo "dataset,n_keys,index,config,size_in_bytes,rep,n_queries,mean_ns,p50_ns,p90_ns,p95_ns,p99_ns,bytes_read" > ${FILE_RESULTS} # Write csv header
 for dataset in ${!flags[@]};
 do
     echo "Performing ${EXPERIMENT} on '${dataset}'..."

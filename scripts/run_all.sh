@@ -22,3 +22,6 @@ source scripts/run_rmi_guideline.sh
 
 echo "Running Index Comparison (Section 9)..."
 source scripts/run_index_comparison.sh
+
+echo "Running Index Comparison I/O (Section 9)..."
+source scripts/run_index_comparison_io.sh

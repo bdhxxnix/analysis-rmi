@@ -21,4 +21,4 @@ echo "Plotting RMI Guideline (Section 8)..."
 python3 scripts/plot_rmi_guideline.py
 
 echo "Plotting Index Comparison (Section 9)..."
-python3 scripts/plot_index_comparison.py
+python3 scripts/plot_index_comparison.py --io

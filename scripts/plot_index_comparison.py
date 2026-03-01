@@ -15,6 +15,7 @@ warnings.filterwarnings( "ignore")
 # Argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--paper', help='produce paper plots', action='store_true')
+parser.add_argument('--io', help='plot index comparison I/O results', action='store_true')
 args = vars(parser.parse_args())
 
 
@@ -205,6 +206,69 @@ def plot_lookup_shares(filename, width_fact=5, height_fact=4.2):
     fig.savefig(os.path.join(path, filename), bbox_inches='tight')
 
 
+def plot_io_latency(df_io, filename='index_comparison-io_p50.pdf', width_fact=5, height_fact=4.2):
+    n_rows = 2
+    n_cols = 2
+
+    fig, axs = plt.subplots(n_rows, n_cols, figsize=(width_fact*n_cols, height_fact*n_rows), sharey=True, sharex=True)
+    axs = axs.flatten()
+    fig.tight_layout()
+
+    for i, dataset in enumerate(datasets):
+        ax = axs[i]
+
+        for index in index_dict.keys():
+            data = df_io[
+                (df_io['dataset'] == dataset) &
+                (df_io['index'] == index)
+            ]
+            if not data.empty and index != 'Binary search':
+                if index == 'Compact Hist-Tree' or index == 'RadixSpline':
+                    data = compute_pareto_frontier(data, 'size_in_MiB', 'p50_ns')
+                    data = data.sort_values('size_in_MiB')
+                    ax.plot(data['size_in_MiB'], data['p50_ns'], color=colors[index], label=index_dict[index], alpha=0.9)
+                else:
+                    data = data.sort_values('size_in_MiB')
+                    ax.plot(data['size_in_MiB'], data['p50_ns'], color=colors[index], label=index_dict[index], alpha=0.9)
+
+        ax.set_title(dataset)
+        ax.set_xscale('log')
+        ax.set_xlabel('Index size [MiB]')
+        ax.set_ylabel('P50 I/O time [ns]')
+
+    fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
+    fig.savefig(os.path.join(path, filename), bbox_inches='tight')
+
+
+def plot_io_bytes(df_io, filename='index_comparison-io_bytes.pdf', width_fact=5, height_fact=4.2):
+    n_rows = 2
+    n_cols = 2
+
+    fig, axs = plt.subplots(n_rows, n_cols, figsize=(width_fact*n_cols, height_fact*n_rows), sharey=True, sharex=True)
+    axs = axs.flatten()
+    fig.tight_layout()
+
+    for i, dataset in enumerate(datasets):
+        ax = axs[i]
+
+        for index in index_dict.keys():
+            data = df_io[
+                (df_io['dataset'] == dataset) &
+                (df_io['index'] == index)
+            ]
+            if not data.empty and index != 'Binary search':
+                data = data.sort_values('size_in_MiB')
+                ax.plot(data['size_in_MiB'], data['bytes_per_query_kib'], color=colors[index], label=index_dict[index], alpha=0.9)
+
+        ax.set_title(dataset)
+        ax.set_xscale('log')
+        ax.set_xlabel('Index size [MiB]')
+        ax.set_ylabel('Bytes read per query [KiB]')
+
+    fig.legend(ncol=4, bbox_to_anchor=(0.5, 1), loc='lower center')
+    fig.savefig(os.path.join(path, filename), bbox_inches='tight')
+
+
 if __name__ == "__main__":
     path = 'results'
 
@@ -225,14 +289,13 @@ if __name__ == "__main__":
     }
     df.replace({**dataset_dict}, inplace=True)
     index_dict = {
-        # 'RMI-ours': 'RMI (ours)',
+        'RMI-ours': 'RMI (ours)',
         'RMI-ref': 'RMI (ref)',
-        # 'ALEX': 'ALEX',
+        'ALEX': 'ALEX',
         'PGM-index': 'PGM-index',
-        # 'RadixSpline': 'RadixSpline',
-        # 'Compact Hist-Tree': 'Hist-Tree',
-        # 'B-tree': 'B-tree',
-        # 'ART': 'ART'
+        'Fitting Tree': 'Fitting Tree',
+        'RadixSpline': 'RadixSpline',
+        'Compact Hist-Tree': 'Hist-Tree',
     }
 
     # Compute metrics
@@ -283,3 +346,34 @@ if __name__ == "__main__":
         filename = 'index_comparison-lookup_shares.pdf'
         print(f'Plotting lookup time shares to \'{filename}\'...')
         plot_lookup_shares(filename)
+
+    if args['io']:
+        io_file = os.path.join(path, 'index_comparison_io.csv')
+        if os.path.exists(io_file):
+            df_io = pd.read_csv(io_file, delimiter=',', header=0, comment='#')
+            df_io = df_io.replace({np.nan: '-'})
+            df_io = df_io.groupby(['dataset', 'index', 'config']).median().reset_index()
+            df_io.replace({**dataset_dict}, inplace=True)
+
+            df_io['size_in_MiB'] = df_io['size_in_bytes'] / (1024 * 1024)
+            df_io['bytes_per_query'] = df_io['bytes_read'] / df_io['n_queries']
+            df_io['bytes_per_query_kib'] = df_io['bytes_per_query'] / 1024
+
+            if args['paper']:
+                filename = 'index_comparison-io_p50.pdf'
+                print(f'Plotting I/O P50 results to \'{filename}\'...')
+                plot_io_latency(df_io, filename, 4, 2.7)
+
+                filename = 'index_comparison-io_bytes.pdf'
+                print(f'Plotting I/O bytes results to \'{filename}\'...')
+                plot_io_bytes(df_io, filename, 4, 2.7)
+            else:
+                filename = 'index_comparison-io_p50.pdf'
+                print(f'Plotting I/O P50 results to \'{filename}\'...')
+                plot_io_latency(df_io, filename)
+
+                filename = 'index_comparison-io_bytes.pdf'
+                print(f'Plotting I/O bytes results to \'{filename}\'...')
+                plot_io_bytes(df_io, filename)
+        else:
+            print(f'Warning: I/O results file {io_file} not found. Skipping I/O plots.')
